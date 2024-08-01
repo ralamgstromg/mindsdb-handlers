@@ -505,7 +505,7 @@ class NgxForecastHandler(BaseMLEngine):
 
         groups_to_keep = prediction_df["unique_id"].unique()
 
-        neural = NeuralForecast.load(model_args["model_folder"], weights_only=True)
+        neural = NeuralForecast.load(model_args["model_folder"], weights_only=False)
         forecast_df = neural.predict()
         results_df = forecast_df[forecast_df.index.isin(groups_to_keep)].rename(
             {

@@ -1,6 +1,9 @@
 # import os
 # os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
+import os
+os.environ['NIXTLA_ID_AS_COL'] = '1'
+
 from sklearn.metrics import r2_score
 import numpy as np
 import pandas as pd
@@ -480,7 +483,7 @@ class NgxForecastHandler(BaseMLEngine):
                 neural.fit(training_df)
 
             # persist changes to handler folder
-            neural.save(model_args["model_folder"], overwrite=True)
+            neural.save(model_args["model_folder"], overwrite=True, weights_only=True)
             self.model_storage.json_set("model_args", model_args)
 
         else:
@@ -502,7 +505,7 @@ class NgxForecastHandler(BaseMLEngine):
 
         groups_to_keep = prediction_df["unique_id"].unique()
 
-        neural = NeuralForecast.load(model_args["model_folder"])
+        neural = NeuralForecast.load(model_args["model_folder"], weights_only=True)
         forecast_df = neural.predict()
         results_df = forecast_df[forecast_df.index.isin(groups_to_keep)].rename(
             {

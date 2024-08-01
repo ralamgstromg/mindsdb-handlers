@@ -483,7 +483,7 @@ class NgxForecastHandler(BaseMLEngine):
                 neural.fit(training_df)
 
             # persist changes to handler folder
-            neural.save(model_args["model_folder"], overwrite=True, weights_only=True)
+            neural.save(model_args["model_folder"], overwrite=True)
             self.model_storage.json_set("model_args", model_args)
 
         else:

@@ -21,7 +21,7 @@ from neuralforecast.models import (
     DilatedRNN,
     DeepAR,
     TCN,
-    TimesNet,
+    # TimesNet,
     MLP,
     NBEATS,
     NBEATSx,
@@ -41,7 +41,7 @@ from neuralforecast.auto import (
     AutoDilatedRNN,
     AutoDeepAR,
     AutoTCN,
-    AutoTimesNet,
+    # AutoTimesNet,
     AutoMLP,
     AutoNBEATS,
     AutoNBEATSx,
@@ -297,8 +297,8 @@ class NgxForecastHandler(BaseMLEngine):
                 model = AutoDeepAR(**conf)
             elif model_args["model_type"].lower() == "tcn":
                 model = AutoTCN(**conf)
-            elif model_args["model_type"].lower() == "timesnet":
-                model = AutoTimesNet(**conf)
+            # elif model_args["model_type"].lower() == "timesnet":
+            #     model = AutoTimesNet(**conf)
             elif model_args["model_type"].lower() == "mlp":
                 model = AutoMLP(**conf)
             elif model_args["model_type"].lower() == "nbeats":
@@ -364,15 +364,15 @@ class NgxForecastHandler(BaseMLEngine):
                 del conf["n_series"]
                 del conf["encoder_n_layers"]
                 model = TCN(**conf)
-            elif model_args["model_type"].lower() == "timesnet":
-                del conf["n_series"]
-                del conf["hist_exog_list"]
-                del conf["encoder_hidden_size"]
-                del conf["encoder_n_layers"]
-                del conf["decoder_layers"]
-                del conf["context_size"]
-                del conf["decoder_hidden_size"]
-                model = TimesNet(**conf)
+            # elif model_args["model_type"].lower() == "timesnet":
+            #     del conf["n_series"]
+            #     del conf["hist_exog_list"]
+            #     del conf["encoder_hidden_size"]
+            #     del conf["encoder_n_layers"]
+            #     del conf["decoder_layers"]
+            #     del conf["context_size"]
+            #     del conf["decoder_hidden_size"]
+            #     model = TimesNet(**conf)
 
             elif model_args["model_type"].lower() == "mlp":
                 del conf["n_series"]
@@ -516,7 +516,7 @@ class NgxForecastHandler(BaseMLEngine):
                 "DilatedRNN": model_args["target"],
                 "DeepAR": model_args["target"],
                 "TCN": model_args["target"],
-                "TimesNet": model_args["target"],
+                #"TimesNet": model_args["target"],
                 "MLP": model_args["target"],
                 "NBEATS": model_args["target"],
                 "NBEATSx": model_args["target"],

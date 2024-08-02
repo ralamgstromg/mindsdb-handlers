@@ -1,0 +1,1 @@
+cp -r *_handler /home/rcastro/Documentos/temporal/mindsdb/mindsdb/integrations/handlers

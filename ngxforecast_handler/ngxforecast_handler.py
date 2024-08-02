@@ -1,8 +1,8 @@
 # import os
 # os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
-import os
-os.environ['NIXTLA_ID_AS_COL'] = '1'
+#import os
+#os.environ['NIXTLA_ID_AS_COL'] = '1'
 
 from sklearn.metrics import r2_score
 import numpy as np
@@ -21,7 +21,7 @@ from neuralforecast.models import (
     DilatedRNN,
     DeepAR,
     TCN,
-    # TimesNet,
+    TimesNet,
     MLP,
     NBEATS,
     NBEATSx,
@@ -41,7 +41,7 @@ from neuralforecast.auto import (
     AutoDilatedRNN,
     AutoDeepAR,
     AutoTCN,
-    # AutoTimesNet,
+    AutoTimesNet,
     AutoMLP,
     AutoNBEATS,
     AutoNBEATSx,
@@ -150,7 +150,7 @@ def get_results_from_nixtla_df(nixtla_df, model_args):
     return_df = nixtla_df.reset_index(
         drop=True if "unique_id" in nixtla_df.columns else False
     )
-    if len(model_args["group_by"]) > 0:
+    if len(model_args["group_by"]) > 0:     
         if len(model_args["group_by"]) > 1:
             for i, group in enumerate(model_args["group_by"]):
                 return_df[group] = return_df["unique_id"].apply(
@@ -159,10 +159,12 @@ def get_results_from_nixtla_df(nixtla_df, model_args):
         else:
             group_by_col = model_args["group_by"][0]
             return_df[group_by_col] = return_df["unique_id"]
-
-    return return_df.drop(["unique_id"], axis=1).rename(
+    
+    res = return_df.drop(["unique_id"], axis=1).rename(
         {"ds": model_args["order_by"]}, axis=1
     )
+
+    return res
 
 
 def get_model_accuracy_dict(nixtla_results_df, metric=r2_score):
@@ -297,8 +299,8 @@ class NgxForecastHandler(BaseMLEngine):
                 model = AutoDeepAR(**conf)
             elif model_args["model_type"].lower() == "tcn":
                 model = AutoTCN(**conf)
-            # elif model_args["model_type"].lower() == "timesnet":
-            #     model = AutoTimesNet(**conf)
+            elif model_args["model_type"].lower() == "timesnet":
+                model = AutoTimesNet(**conf)
             elif model_args["model_type"].lower() == "mlp":
                 model = AutoMLP(**conf)
             elif model_args["model_type"].lower() == "nbeats":
@@ -364,15 +366,15 @@ class NgxForecastHandler(BaseMLEngine):
                 del conf["n_series"]
                 del conf["encoder_n_layers"]
                 model = TCN(**conf)
-            # elif model_args["model_type"].lower() == "timesnet":
-            #     del conf["n_series"]
-            #     del conf["hist_exog_list"]
-            #     del conf["encoder_hidden_size"]
-            #     del conf["encoder_n_layers"]
-            #     del conf["decoder_layers"]
-            #     del conf["context_size"]
-            #     del conf["decoder_hidden_size"]
-            #     model = TimesNet(**conf)
+            elif model_args["model_type"].lower() == "timesnet":
+                del conf["n_series"]
+                del conf["hist_exog_list"]
+                del conf["encoder_hidden_size"]
+                del conf["encoder_n_layers"]
+                del conf["decoder_layers"]
+                del conf["context_size"]
+                del conf["decoder_hidden_size"]
+                model = TimesNet(**conf)
 
             elif model_args["model_type"].lower() == "mlp":
                 del conf["n_series"]
@@ -474,7 +476,7 @@ class NgxForecastHandler(BaseMLEngine):
                 models=[model],
                 freq=model_args["frequency"],
 
-                # local_scaler_type=model_args["local_scaler_type"],
+                local_scaler_type=model_args["local_scaler_type"],
             )
 
             if model_args.get("crossval", False):
@@ -517,7 +519,7 @@ class NgxForecastHandler(BaseMLEngine):
                 "DilatedRNN": model_args["target"],
                 "DeepAR": model_args["target"],
                 "TCN": model_args["target"],
-                #"TimesNet": model_args["target"],
+                "TimesNet": model_args["target"],
                 "MLP": model_args["target"],
                 "NBEATS": model_args["target"],
                 "NBEATSx": model_args["target"],

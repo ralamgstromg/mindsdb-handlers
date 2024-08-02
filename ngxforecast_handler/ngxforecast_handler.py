@@ -473,7 +473,8 @@ class NgxForecastHandler(BaseMLEngine):
             neural = NeuralForecast(
                 models=[model],
                 freq=model_args["frequency"],
-                local_scaler_type=model_args["local_scaler_type"],
+
+                # local_scaler_type=model_args["local_scaler_type"],
             )
 
             if model_args.get("crossval", False):

@@ -245,10 +245,7 @@ class BaseMLEngineExec:
         # mdb indexes
         # MODIFIED BY [RCP]
         if '__mindsdb_row_id' not in predictions.columns and '__mindsdb_row_id' in df.columns:
-            if df.shape[0] != predictions.shape[0]:
-                predictions['__mindsdb_row_id'] = pd.RangeIndex(0, predictions.shape[0]).to_series()
-            else:
-                predictions['__mindsdb_row_id'] = df['__mindsdb_row_id']
+            predictions['__mindsdb_row_id'] = pd.RangeIndex(0, predictions.shape[0]).to_series()
         # end
 
         after_predict_hook(

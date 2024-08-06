@@ -342,7 +342,6 @@ class NgxForecastHandler(BaseMLEngine):
             }
             
             if conf["val_check_steps"] == None: del conf["val_check_steps"]
-            #if conf["n_auto_trials"] == None: del conf["n_auto_trials"]
             if conf["encoder_hidden_size"] == None: del conf["encoder_hidden_size"]
             if conf["decoder_hidden_size"] == None: del conf["decoder_hidden_size"]
             if conf["encoder_n_layers"] == None: del conf["encoder_n_layers"]

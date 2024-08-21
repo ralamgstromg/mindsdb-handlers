@@ -4,6 +4,10 @@
 #import os
 #os.environ['NIXTLA_ID_AS_COL'] = '1'
 
+import torch
+device = "gpu" if torch.cuda.is_available() else "cpu"
+print("device=", device)
+
 from sklearn.metrics import r2_score
 import numpy as np
 import pandas as pd
@@ -283,7 +287,6 @@ class NgxForecastHandler(BaseMLEngine):
         if model_args["n_auto_trials"]:
             conf = {
                 "h": time_settings["horizon"],
-                "gpus": 0,
                 "num_samples": model_args["n_auto_trials"],
                 "search_alg": HyperOptSearch(),
             }
@@ -339,6 +342,7 @@ class NgxForecastHandler(BaseMLEngine):
                 + model_args["ds_props"],
                 "n_series": model_args["n_series"],
                 "val_check_steps": model_args["val_check_steps"],
+                "accelerator": device
             }
             
             if conf["val_check_steps"] == None: del conf["val_check_steps"]

@@ -5,8 +5,6 @@
 #os.environ['NIXTLA_ID_AS_COL'] = '1'
 
 import torch
-device = "gpu" if torch.cuda.is_available() else "cpu"
-print("device=", device)
 
 from sklearn.metrics import r2_score
 import numpy as np
@@ -248,6 +246,9 @@ class NgxForecastHandler(BaseMLEngine):
 
         model_args["n_series"] = using_args.get("n_series", None)
 
+        model_args["accelerator"] = using_args.get("accelerator", "cuda:0" if torch.cuda.is_available() else "cpu")
+
+
         # Deal with hierarchy
         # model_args["hierarchy"] = using_args["hierarchy"] if "hierarchy" in using_args else False
         # if model_args["hierarchy"] and HierarchicalReconciliation is not None:
@@ -342,7 +343,7 @@ class NgxForecastHandler(BaseMLEngine):
                 + model_args["ds_props"],
                 "n_series": model_args["n_series"],
                 "val_check_steps": model_args["val_check_steps"],
-                "accelerator": device
+                "accelerator": model_args["accelerator"]
             }
             
             if conf["val_check_steps"] == None: del conf["val_check_steps"]

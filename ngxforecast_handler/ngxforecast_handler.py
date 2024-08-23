@@ -246,7 +246,7 @@ class NgxForecastHandler(BaseMLEngine):
 
         model_args["n_series"] = using_args.get("n_series", None)
 
-        model_args["accelerator"] = using_args.get("accelerator", "cuda:0" if torch.cuda.is_available() else "cpu")
+        model_args["accelerator"] = using_args.get("accelerator", "cuda" if torch.cuda.is_available() else "cpu")
 
 
         # Deal with hierarchy

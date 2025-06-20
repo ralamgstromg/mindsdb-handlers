@@ -4,3 +4,5 @@ cp ml_exec_base.py /home/rcastro/Documentos/temporal/mindsdb/mindsdb/integration
 
 # dentro del contenedor docker
 cp -r *_handler /mindsdb/mindsdb/integrations/handlers
+
+pip install mindsdb[s3_ngx_handler]

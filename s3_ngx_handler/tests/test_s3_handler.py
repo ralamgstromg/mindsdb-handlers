@@ -7,10 +7,12 @@ class S3HandlerTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.kwargs = {
+            "endpoint_url": "s3.amazonaws.com",
             "aws_access_key_id": "PCAQ2LJDOSWLNSQKOCPW",
             "aws_secret_access_key": "U/VjewPlNopsDmmwItl34r2neyC6WhZpUiip57i",
             "region_name": "us-east-1",
             "bucket": "mindsdb-bucket",
+            "use_ssl": True,
             "key": "iris.csv",
             "input_serialization": "{'CSV': {'FileHeaderInfo': 'NONE'}}"
         }

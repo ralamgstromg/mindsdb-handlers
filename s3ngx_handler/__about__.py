@@ -1,5 +1,5 @@
 __title__ = 'MindsDB NegEx-AI S3 handler'
-__package_name__ = 'mindsdb_s3_ngx_handler'
+__package_name__ = 'mindsdb_s3ngx_handler'
 __version__ = '0.0.1'
 __description__ = "MindsDB handler for S3 compatible endpoint"
 __author__ = 'Raul Castro Palmett'

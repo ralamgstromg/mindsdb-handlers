@@ -71,7 +71,7 @@ class FileTable(APIResource):
         return self.handler.add_data_to_table(table_name, df)
 
 
-class S3Handler(APIHandler):
+class S3NgxHandler(APIHandler):
     """
     This handler handles connection and execution of the SQL statements on AWS S3.
     """

@@ -1,0 +1,9 @@
+__title__ = 'MindsDB NegEx-AI S3 handler'
+__package_name__ = 'mindsdb_s3_ngx_handler'
+__version__ = '0.0.1'
+__description__ = "MindsDB handler for S3 compatible endpoint"
+__author__ = 'Raul Castro Palmett'
+__github__ = 'https://github.com/ralamgstromg/mindsdb-handlers'
+__pypi__ = 'https://pypi.org/project/mindsdb/'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2022- mindsdb'

@@ -419,8 +419,8 @@ class S3NgxHandler(APIHandler):
                     # bucket is part of the name
                     obj['Key'] = f'{bucket}/{obj["Key"]}'
                 objects.append(obj)
-            if limit is not None and len(objects) >= limit:
-                break
+            # if limit is not None and len(objects) >= limit:
+            #     break
 
         return objects
 

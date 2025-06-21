@@ -10,7 +10,7 @@ from typing import Text, Dict, Optional
 from botocore.exceptions import ClientError
 
 from mindsdb_sql_parser.ast.base import ASTNode
-from mindsdb_sql_parser.ast import Select, Identifier, Insert, Star, Constant
+from mindsdb_sql_parser.ast import Select, Identifier, Insert, Star, Constant, DropTables, CreateTable
 
 from mindsdb.utilities import log
 from mindsdb.integrations.libs.response import (
@@ -76,7 +76,7 @@ class S3NgxHandler(APIHandler):
     This handler handles connection and execution of the SQL statements on AWS S3.
     """
 
-    name = 's3'
+    name = 's3ngx'
     # TODO: Can other file formats be supported?
     supported_file_formats = ['csv', 'tsv', 'json', 'parquet']
 
@@ -140,20 +140,12 @@ class S3NgxHandler(APIHandler):
         # Connect to S3 via DuckDB.
         duckdb_conn = duckdb.connect(":memory:")
         try:
-            duckdb_conn.execute("INSTALL httpfs")
+            duckdb_conn.execute("INSTALL httpfs;")
         except HTTPException as http_error:
             logger.debug(f"Error installing the httpfs extension, {http_error}! Forcing installation.")
-            duckdb_conn.execute("FORCE INSTALL httpfs")
+            duckdb_conn.execute("FORCE INSTALL httpfs;")
 
-        duckdb_conn.execute("LOAD httpfs")
-
-        # Configure mandatory credentials.
-        # duckdb_conn.execute(f"SET s3_access_key_id='{self.connection_data['aws_access_key_id']}'")
-        # duckdb_conn.execute(f"SET s3_secret_access_key='{self.connection_data['aws_secret_access_key']}'")
-
-        # # Configure optional parameters.
-        # if 'aws_session_token' in self.connection_data:
-        #     duckdb_conn.execute(f"SET s3_session_token='{self.connection_data['aws_session_token']}'")
+        duckdb_conn.execute("LOAD httpfs;")
 
         # detect region for bucket
         if bucket not in self._regions:
@@ -161,7 +153,6 @@ class S3NgxHandler(APIHandler):
             self._regions[bucket] = client.get_bucket_location(Bucket=bucket)['LocationConstraint']
 
         region = self._regions[bucket]
-        # duckdb_conn.execute(f"SET s3_region='{region}'")
 
         endpoint_url = self.connection_data.get('endpoint_url', 's3.amazonaws.com')
         use_ssl = self.connection_data.get('use_ssl', True)
@@ -330,7 +321,27 @@ class S3NgxHandler(APIHandler):
 
         self.connect()
 
-        if isinstance(query, Select):
+        if isinstance(query, DropTables):
+            for table_identifier in query.tables:
+                if len(table_identifier.parts) == 2 and table_identifier.parts[0] != self.name:
+                    return Response(
+                        RESPONSE_TYPE.ERROR,
+                        error_message=f"Can't delete table from database '{table_identifier.parts[0]}'",
+                    )
+                table_name = table_identifier.parts[-1]
+                try:
+                    self.connection.delete_object(Bucket=self.bucket, Key=table_name)
+                except Exception as e:
+                    return Response(
+                        RESPONSE_TYPE.ERROR,
+                        error_message=f"Can't delete table '{table_name}': {e}",
+                    )
+            response = Response(RESPONSE_TYPE.OK)
+
+        elif isinstance(query, CreateTable):
+            response = Response(RESPONSE_TYPE.OK)
+
+        elif isinstance(query, Select):
             table_name = query.from_table.parts[-1]
 
             if table_name == 'files':
